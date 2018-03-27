@@ -114,7 +114,7 @@ public class GenericXmlReader<D extends TOP> {
 			}
 		}
 		parsingDescription.setXmlDeclarations(ArrayUtil.toStringArray(jcas, declarations));
-
+		parsingDescription.addToIndexes();
 		return jcas;
 	}
 
