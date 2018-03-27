@@ -20,7 +20,7 @@ import de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_NOUN;
 import de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_VERB;
 import de.tudarmstadt.ukp.dkpro.core.api.metadata.type.DocumentMetaData;
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence;
-import de.unistuttgart.ims.uima.io.xml.GenericXmlReader;
+import de.unistuttgart.ims.uima.io.xml.type.XMLParsingDescription;
 
 public class TestGenericXmlReader {
 
@@ -105,5 +105,40 @@ public class TestGenericXmlReader {
 		assertEquals("nn", JCasUtil.selectByIndex(jcas, POS.class, 1).getPosValue());
 
 		assertEquals("The Dog Story", DocumentMetaData.get(jcas).getDocumentTitle());
+	}
+
+	@Test
+	public void test4() throws UIMAException, IOException {
+
+		String xmlString = "<?xml encoding=\"UTF-8\"?>\n<?xml-stylesheet type=\"text/css\" href=\"../schema/tei.css\"?>\n<text>\n<head>\n<title>The Dog Story</title><title>bla</title></head><body><s><pos pos=\"det\">the</pos> <pos pos=\"nn\">dog</pos> <pos pos=\"v\">barks</pos></s> <s><pos>The</pos> <pos>cat</pos> <pos>too</pos></s></body></text>";
+		gxr.setPreserveWhitespace(true);
+
+		gxr.addRule("title", Sentence.class);
+		gxr.addRule("s", Sentence.class);
+		gxr.addRule("pos", POS.class, (anno, xmlElement) -> {
+			if (xmlElement.hasAttr("pos"))
+				anno.setPosValue(xmlElement.attr("pos"));
+		});
+
+		jcas = gxr.read(jcas, IOUtils.toInputStream(xmlString, "UTF-8"));
+
+		assertNotNull(jcas);
+
+		assertTrue(JCasUtil.exists(jcas, XMLParsingDescription.class));
+		assertTrue(JCasUtil.exists(jcas, Sentence.class));
+		assertEquals(4, JCasUtil.select(jcas, Sentence.class).size());
+
+		assertEquals('\n', jcas.getDocumentText().charAt(0));
+		assertEquals('\n', jcas.getDocumentText().charAt(1));
+		assertEquals('\n', jcas.getDocumentText().charAt(2));
+		assertEquals('\n', jcas.getDocumentText().charAt(3));
+		assertEquals('T', jcas.getDocumentText().charAt(4));
+		assertEquals(4, JCasUtil.selectByIndex(jcas, Sentence.class, 0).getBegin());
+
+		assertTrue(JCasUtil.exists(jcas, POS.class));
+		assertEquals(6, JCasUtil.select(jcas, POS.class).size());
+		assertEquals("det", JCasUtil.selectByIndex(jcas, POS.class, 0).getPosValue());
+		assertEquals("nn", JCasUtil.selectByIndex(jcas, POS.class, 1).getPosValue());
+
 	}
 }
