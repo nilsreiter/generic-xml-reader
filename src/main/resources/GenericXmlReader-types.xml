@@ -6,9 +6,26 @@
 	<vendor>Nils Reiter</vendor>
 	<types>
 		<typeDescription>
-			<name>de.unistuttgart.ims.uima.io.xml.type.XMLElement</name>
+			<name>de.unistuttgart.ims.uima.io.xml.type.XmlNodeAnnotation</name>
 			<description />
 			<supertypeName>uima.tcas.Annotation</supertypeName>
+			<features>
+				<featureDescription>
+					<name>outerHtml</name>
+					<description />
+					<rangeTypeName>uima.cas.String</rangeTypeName>
+				</featureDescription>
+			</features>
+		</typeDescription>		
+		<typeDescription>
+			<name>de.unistuttgart.ims.uima.io.xml.type.XmlDeclarationAnnotation</name>
+			<description />
+			<supertypeName>de.unistuttgart.ims.uima.io.xml.type.XmlNodeAnnotation</supertypeName>
+		</typeDescription>
+		<typeDescription>
+			<name>de.unistuttgart.ims.uima.io.xml.type.XMLElement</name>
+			<description />
+			<supertypeName>de.unistuttgart.ims.uima.io.xml.type.XmlNodeAnnotation</supertypeName>
 			<features>
 				<featureDescription>
 					<name>Tag</name>

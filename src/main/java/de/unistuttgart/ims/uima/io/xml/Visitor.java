@@ -9,9 +9,11 @@ import org.apache.uima.jcas.JCas;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
+import org.jsoup.nodes.XmlDeclaration;
 import org.jsoup.select.NodeVisitor;
 
 import de.unistuttgart.ims.uima.io.xml.type.XMLElement;
+import de.unistuttgart.ims.uima.io.xml.type.XmlDeclarationAnnotation;
 
 public class Visitor implements NodeVisitor {
 
@@ -25,16 +27,17 @@ public class Visitor implements NodeVisitor {
 	protected boolean preserveWhitespace = false;
 
 	public Visitor(JCas jcas) {
-		builder = new JCasBuilder(jcas);
+		this.builder = new JCasBuilder(jcas);
 	}
 
 	public Visitor(JCas jcas, boolean preserveWhitespace) {
-		builder = new JCasBuilder(jcas);
+		this.builder = new JCasBuilder(jcas);
 		this.preserveWhitespace = preserveWhitespace;
 	}
 
+	@Override
 	public void head(Node node, int depth) {
-		if (node.getClass().equals(TextNode.class)) {
+		if (node instanceof TextNode) {
 			if (this.preserveWhitespace)
 				builder.add(((TextNode) node).getWholeText());
 			else
@@ -44,8 +47,9 @@ public class Visitor implements NodeVisitor {
 		}
 	}
 
+	@Override
 	public void tail(Node node, int depth) {
-		if (node.getClass().equals(Element.class)) {
+		if (node instanceof Element) {
 			Element elm = (Element) node;
 			XMLElement anno = builder.add(beginMap.get(node), XMLElement.class);
 			anno.setTag(elm.tagName());
@@ -60,6 +64,10 @@ public class Visitor implements NodeVisitor {
 			if (!this.preserveWhitespace)
 				if (elm.isBlock() || ArrayUtils.contains(blockElements, elm.tagName()))
 					builder.add("\n");
+		} else if (node instanceof XmlDeclaration) {
+			XmlDeclaration xmlDecl = (XmlDeclaration) node;
+			XmlDeclarationAnnotation anno = builder.add(beginMap.get(node), XmlDeclarationAnnotation.class);
+			anno.setOuterHtml(xmlDecl.outerHtml());
 		}
 	}
 
