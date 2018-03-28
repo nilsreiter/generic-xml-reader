@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-import org.apache.commons.compress.utils.IOUtils;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 
@@ -67,15 +66,12 @@ public class GenericXmlWriter {
 			}
 		}
 
-		OutputStreamWriter fos = new OutputStreamWriter(os);
-		try {
+		try (OutputStreamWriter fos = new OutputStreamWriter(os)) {
 			fos.write(b.toString());
 			fos.flush();
 			fos.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			IOUtils.closeQuietly(fos);
 		}
 
 	}
