@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.uima.UIMAException;
@@ -56,5 +57,20 @@ public class TestRoundTrip {
 		gxw.write(jcas, boas);
 		String s = boas.toString("UTF-8");
 		assertEquals(xmlString, s);
+	}
+
+	@Test
+	public void test4() throws IOException {
+		testRoundTrip(getClass().getResourceAsStream("/11g1d.0.xml"));
+	}
+
+	public void testRoundTrip(InputStream is) throws IOException {
+		String input = IOUtils.toString(is);
+		jcas = gxr.read(jcas, IOUtils.toInputStream(input, "UTF-8"));
+		ByteArrayOutputStream boas = new ByteArrayOutputStream();
+		gxw.write(jcas, boas);
+		String s = boas.toString("UTF-8");
+		assertEquals(input, s);
+
 	}
 }
