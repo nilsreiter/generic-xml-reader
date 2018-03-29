@@ -47,7 +47,6 @@ import de.unistuttgart.ims.uima.io.xml.type.XMLParsingDescription;
  * 
  * 
  * 
- * <h2>CSS vs. XPath</h2> TODO: Why CSS and not XPath?
  * 
  * @since 1.0.0
  */
@@ -114,7 +113,7 @@ public class GenericXmlReader<D extends TOP> {
 			}
 		}
 		parsingDescription.setXmlDeclarations(ArrayUtil.toStringArray(jcas, declarations));
-
+		parsingDescription.addToIndexes();
 		return jcas;
 	}
 
