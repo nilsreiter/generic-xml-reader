@@ -69,7 +69,6 @@ public class GenericXmlWriter {
 		try (OutputStreamWriter fos = new OutputStreamWriter(os)) {
 			fos.write(b.toString());
 			fos.flush();
-			fos.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
