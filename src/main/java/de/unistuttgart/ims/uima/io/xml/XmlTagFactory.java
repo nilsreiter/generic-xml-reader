@@ -9,25 +9,46 @@ public class XmlTagFactory implements InlineTagFactory<XmlNodeAnnotation> {
 	@Override
 	public String getBeginTag(XmlNodeAnnotation anno) {
 		if (anno instanceof XMLElement) {
-			XMLElement h = (XMLElement) anno;
-			if (h.getBegin() == h.getEnd())
-				return "<" + h.getTag() + h.getAttributes() + "/>";
-			else
-				return "<" + h.getTag() + h.getAttributes() + ">";
-		} else if (anno instanceof XmlDeclarationAnnotation) {
-			XmlDeclarationAnnotation h = (XmlDeclarationAnnotation) anno;
-			return h.getOuterHtml();
+			return getBeginTag((XMLElement) anno);
 		}
 		return "";
 	}
 
+	protected String getBeginTag(XMLElement h) {
+		if (h.getTag() == "#root")
+			return "";
+
+		return "<" + h.getTag() + h.getAttributes() + ">";
+	}
+
+	@Override
+	public String getEmptyTag(XmlNodeAnnotation anno) {
+		if (anno instanceof XMLElement)
+			return getEmptyTag((XMLElement) anno);
+		if (anno instanceof XmlDeclarationAnnotation)
+			return getEmptyTag((XmlDeclarationAnnotation) anno);
+		return "";
+	}
+
+	protected String getEmptyTag(XMLElement h) {
+		return "<" + h.getTag() + h.getAttributes() + "/>";
+	}
+
+	protected String getEmptyTag(XmlDeclarationAnnotation h) {
+		return h.getOuterHtml();
+	}
+
 	@Override
 	public String getEndTag(XmlNodeAnnotation anno) {
-		if (anno instanceof XMLElement && anno.getBegin() != anno.getEnd()) {
-			XMLElement h = (XMLElement) anno;
-			return "</" + h.getTag() + ">";
-		}
+		if (anno instanceof XMLElement)
+			return getEndTag((XMLElement) anno);
 		return "";
+	}
+
+	protected String getEndTag(XMLElement h) {
+		if (h.getTag() == "#root")
+			return "";
+		return "</" + h.getTag() + ">";
 	}
 
 }

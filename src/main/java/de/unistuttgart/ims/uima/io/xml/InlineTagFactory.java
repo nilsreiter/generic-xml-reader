@@ -7,4 +7,6 @@ public interface InlineTagFactory<S extends Annotation> {
 	String getBeginTag(S anno);
 
 	String getEndTag(S anno);
+
+	String getEmptyTag(S anno);
 }

@@ -14,9 +14,6 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.Annotation;
 
-import de.unistuttgart.ims.uima.io.xml.type.XMLElement;
-import de.unistuttgart.ims.uima.io.xml.type.XmlDeclarationAnnotation;
-
 public class GenericInlineWriter<S extends Annotation> {
 
 	Class<S> annotationClass;
@@ -53,24 +50,12 @@ public class GenericInlineWriter<S extends Annotation> {
 				TreeSet<S> ts = new TreeSet<S>(new AnnotationChooser(currentPos));
 				ts.addAll(positions.get(i));
 				for (S nodeAnno : ts) {
-
-					if (nodeAnno instanceof XMLElement) {
-						XMLElement h = (XMLElement) nodeAnno;
-						if (h.getTag() == "#root")
-							continue;
-						if (h.getEnd() == h.getBegin()) {
-							b.insert(i, "<" + h.getTag() + h.getAttributes() + "/>");
-						} else {
-							if (h.getEnd() == i) {
-								b.insert(i, "</" + h.getTag() + ">");
-							} else if (h.getBegin() == i) {
-								b.insert(i, "<" + h.getTag() + h.getAttributes() + ">");
-							}
-						}
-					} else if (nodeAnno instanceof XmlDeclarationAnnotation) {
-						XmlDeclarationAnnotation h = (XmlDeclarationAnnotation) nodeAnno;
-						b.insert(i, h.getOuterHtml());
-					}
+					if (nodeAnno.getEnd() == nodeAnno.getBegin() && nodeAnno.getBegin() == i)
+						b.insert(i, tagFactory.getEmptyTag(nodeAnno));
+					else if (nodeAnno.getEnd() == i)
+						b.insert(i, tagFactory.getEndTag(nodeAnno));
+					else if (nodeAnno.getBegin() == i)
+						b.insert(i, tagFactory.getBeginTag(nodeAnno));
 				}
 			}
 		}
