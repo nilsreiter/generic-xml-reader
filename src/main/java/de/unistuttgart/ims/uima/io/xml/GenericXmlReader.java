@@ -47,7 +47,6 @@ import de.unistuttgart.ims.uima.io.xml.type.XMLParsingDescription;
  * 
  * 
  * 
- * <h2>CSS vs. XPath</h2> TODO: Why CSS and not XPath?
  * 
  * @since 1.0.0
  */
