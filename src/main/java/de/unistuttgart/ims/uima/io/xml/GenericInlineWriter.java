@@ -68,4 +68,20 @@ public class GenericInlineWriter<S extends Annotation> {
 		}
 
 	}
+
+	public Class<S> getAnnotationClass() {
+		return annotationClass;
+	}
+
+	public void setAnnotationClass(Class<S> annotationClass) {
+		this.annotationClass = annotationClass;
+	}
+
+	public InlineTagFactory<S> getTagFactory() {
+		return tagFactory;
+	}
+
+	public void setTagFactory(InlineTagFactory<S> tagFactory) {
+		this.tagFactory = tagFactory;
+	}
 }
