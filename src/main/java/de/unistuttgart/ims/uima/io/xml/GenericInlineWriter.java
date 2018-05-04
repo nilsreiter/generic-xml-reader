@@ -24,22 +24,29 @@ public class GenericInlineWriter<S extends Annotation> {
 	}
 
 	public void write(JCas jcas, OutputStream os) {
-		StringBuilder b = new StringBuilder(jcas.getDocumentText());
+		write(jcas, os, 0, jcas.getDocumentText().length());
+	}
 
-		Collection<? extends S> htmls = JCasUtil.select(jcas, annotationClass);
+	public void write(JCas jcas, OutputStream os, int begin, int end) {
+		StringBuilder b = new StringBuilder(jcas.getDocumentText().substring(begin, end));
+
+		Annotation a = new Annotation(jcas);
+		a.setBegin(begin);
+		a.setEnd(end);
+		Collection<? extends S> htmls = JCasUtil.selectCovered(jcas, annotationClass, a);
 		Map<Integer, List<S>> positions = new HashMap<Integer, List<S>>();
 
 		for (S h : htmls) {
-			if (!positions.containsKey(h.getBegin())) {
-				positions.put(h.getBegin(), new LinkedList<S>());
+			if (!positions.containsKey(h.getBegin() - begin)) {
+				positions.put(h.getBegin() - begin, new LinkedList<S>());
 			}
-			positions.get(h.getBegin()).add(h);
-			if (h.getBegin() != h.getEnd()) {
+			positions.get(h.getBegin() - begin).add(h);
+			if (h.getBegin() - begin != h.getEnd() - begin) {
 
-				if (!positions.containsKey(h.getEnd())) {
-					positions.put(h.getEnd(), new LinkedList<S>());
+				if (!positions.containsKey(h.getEnd() - begin)) {
+					positions.put(h.getEnd() - begin, new LinkedList<S>());
 				}
-				positions.get(h.getEnd()).add(h);
+				positions.get(h.getEnd() - begin).add(h);
 			}
 
 		}
@@ -50,11 +57,11 @@ public class GenericInlineWriter<S extends Annotation> {
 				TreeSet<S> ts = new TreeSet<S>(new AnnotationChooser(currentPos));
 				ts.addAll(positions.get(i));
 				for (S nodeAnno : ts) {
-					if (nodeAnno.getEnd() == nodeAnno.getBegin() && nodeAnno.getBegin() == i)
+					if (nodeAnno.getEnd() == nodeAnno.getBegin() && nodeAnno.getBegin() - begin == i)
 						b.insert(i, tagFactory.getEmptyTag(nodeAnno));
-					else if (nodeAnno.getEnd() == i)
+					else if (nodeAnno.getEnd() - begin == i)
 						b.insert(i, tagFactory.getEndTag(nodeAnno));
-					else if (nodeAnno.getBegin() == i)
+					else if (nodeAnno.getBegin() - begin == i)
 						b.insert(i, tagFactory.getBeginTag(nodeAnno));
 				}
 			}

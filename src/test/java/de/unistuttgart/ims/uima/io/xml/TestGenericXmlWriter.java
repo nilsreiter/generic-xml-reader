@@ -39,4 +39,12 @@ public class TestGenericXmlWriter {
 		String s = boas.toString("UTF-8");
 		assertEquals(xmlString, s);
 	}
+
+	@Test
+	public void testSegmentedWriter() throws UnsupportedEncodingException {
+		ByteArrayOutputStream boas = new ByteArrayOutputStream();
+		gxw.write(jcas, boas, 3, 8);
+		String s = boas.toString("UTF-8");
+		assertEquals(" <pos pos=\"nn\">dog</pos> ", s);
+	}
 }
