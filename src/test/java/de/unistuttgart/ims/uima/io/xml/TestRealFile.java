@@ -21,7 +21,7 @@ public class TestRealFile {
 
 		gxr.addGlobalRule("titleStmt > title", (d, e) -> d.setDocumentTitle(e.text()));
 
-		jcas = gxr.read(jcas, getClass().getResourceAsStream("0.xml"));
+		jcas = gxr.read(jcas, getClass().getResourceAsStream("/0.xml"));
 		assertTrue(JCasUtil.exists(jcas, DocumentMetaData.class));
 		DocumentMetaData dmd = JCasUtil.selectSingle(jcas, DocumentMetaData.class);
 		assertEquals("[Widmung]", dmd.getDocumentTitle());
