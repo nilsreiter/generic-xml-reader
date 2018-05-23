@@ -1,0 +1,74 @@
+<TEI xml:id="tg159" n="/Literatur/M/Ahlefeld, Charlotte von/Erzählungen/Gesammelte Erzählungen/Erster Band/[Widmung]">
+                  <teiHeader n="work:no">
+                     <fileDesc>
+                        <titleStmt>
+                           <title>[Widmung]</title>
+                        </titleStmt>
+                        <publicationStmt>
+                           <idno xmlns:xi="http://www.w3.org/2001/XInclude" type="FileCreationTime">Ahlefeld, Charlotte von: Element 00072 [2011/07/11 at 20:27:40]</idno>
+                           <availability xmlns:xi="http://www.w3.org/2001/XInclude">
+                              <p> Der annotierte Datenbestand der Digitalen Bibliothek inklusive Metadaten sowie
+                    davon einzeln zugängliche Teile sind eine Abwandlung des Datenbestandes von
+                    www.editura.de durch TextGrid und werden unter der Lizenz Creative Commons
+                    Namensnennung 3.0 Deutschland Lizenz (by-Nennung TextGrid, www.editura.de) veröffentlicht. Die
+                    Lizenz bezieht sich nicht auf die der Annotation zu Grunde liegenden
+                    allgemeinfreien Texte (Siehe auch Punkt 2 der Lizenzbestimmungen). </p>
+                              <p>
+                                 <ref target="http://creativecommons.org/licenses/by/3.0/de/legalcode">Lizenzvertrag</ref>
+                              </p>
+                              <p>
+                                 <ref target="http://creativecommons.org/licenses/by/3.0/de/"> Eine vereinfachte
+                    Zusammenfassung des rechtsverbindlichen Lizenzvertrages in
+                    allgemeinverständlicher Sprache </ref>
+                              </p>
+                              <p>
+                                 <ref target="http://www.textgrid.de/Digitale-Bibliothek">Hinweise zur Lizenz und zur Digitalen Bibliothek</ref>
+                              </p>
+                           </availability>
+                        </publicationStmt>
+                        <sourceDesc>
+                           <bibl xmlns:xi="http://www.w3.org/2001/XInclude">
+                              <author key="pnd:118962590">Ahlefeld, Charlotte von</author>
+                           </bibl>
+                        </sourceDesc>
+                     </fileDesc>
+                  </teiHeader>
+                  <text>
+                     <body>
+                           
+                              
+                           
+                           <pb type="start" n="3" xml:id="tg159.1" />
+                           
+                           <div type="text" xml:id="tg159.3">
+                              <div type="h4">
+                                 <head type="h4" xml:id="tg159.3.1">[Widmung]</head>
+                                 <milestone unit="head_start" />
+                                    <p rend="zenoPC" xml:id="tg159.3.2">Meiner</p>
+                                    <p rend="zenoPC" xml:id="tg159.3.3">geliebten Schwester</p>
+                                    <p rend="zenoPC" xml:id="tg159.3.4">Amalia v. Stein</p>
+                                    <p rend="zenoPC" xml:id="tg159.3.5">geborne v. Seebach</p>
+                                    <p rend="zenoPC" xml:id="tg159.3.6">freundlich gewidmet.</p>
+                                 <milestone unit="head_end" />
+                                 <lb xml:id="tg159.3.7" />
+                                 <pb n="3" xml:id="tg159.3.8" />
+                                 <pb type="start" n="5" xml:id="tg159.3.9" />
+                                 <lb xml:id="tg159.3.10" />
+                                 <p xml:id="tg159.3.11">Du hast, liebe Amalie, schon in früher Jugend so nachsichtsvoll mich und die bunten Seifenblasen ertragen, mit denen meine Fantasie zu spielen pflegte, und als uns das Schicksal im Lenz unserer Jahre trennte, und fern von Dir mir meinen Wohnplatz im Norden anwies, bist Du mir theilnehmend im Geiste gefolgt zur neuen Heimath, und hast mich fortgeliebt in den Erinnerungen der Vergangenheit, so wie in den Schöpfungen, durch die ich meine einsamen Stunden zu beleben suchte. Es hat Dich gefreut, wenn Du in Taschenbüchern und Zeitschriften den Namen, oder wenigstens die Arbeiten Deiner Schwester fandest, und so mittelmäßig sie auch vielleicht waren, schien es Deiner herzlichen Partheilichkeit für mich doch eine Gunst des Glücks zu seyn, daß ich – um mit Tasso zu reden – sagen und singen konnte, was ich dachte, und wie mir's um's Herz war.</p>
+                                 <p rend="zenoPLm4n0" xml:id="tg159.3.12">
+                                    <pb n="5" xml:id="tg159.3.12.1" />
+Dies schwesterliche Wohlwollen, nicht nur gegen mich, sondern auch gegen die schwachen Versuche meiner Feder, macht mich so kühn, diese Erzählungen, von welchen Du mehrere schon einzeln kennst, Dir jetzt gesammelt zu widmen. Nimm sie so freundlich auf, wie Du sonst so manchen Blumenstrauß von meiner Hand empfingst, den ich anspruchslos Dir pflückte, und laß den weiten Raum der zwischen uns liegt, nicht <hi rend="spaced" xml:id="tg159.3.12.2">unsere Gemüther</hi> trennen, die in der Ehrfurcht für die Gräber, welche uns gemeinschaftlich heilig sind, ein neues, wiewohl sehr dunkles Band umschlingt, stark genug uns wechselseitig für's ganze Leben an einander zu knüpfen.</p>
+                                 <lb xml:id="tg159.3.13" />
+                                 <p rend="zenoPLm4n0" xml:id="tg159.3.14">Im Februar 1821.</p>
+                                 <lb xml:id="tg159.3.15" />
+                                 <closer>
+                                    <seg type="closer" rend="zenoPR" xml:id="tg159.3.16">
+                                       <hi rend="spaced" xml:id="tg159.3.16.1">Charlotte</hi> v. A.</seg>
+                                    <seg type="closer" rend="zenoPR" xml:id="tg159.3.17">geb. v. S.</seg>
+                                    <pb n="6" xml:id="tg159.3.18" />
+                                 </closer>
+                              </div>
+                           </div>
+                        </body>
+                  </text>
+               </TEI>

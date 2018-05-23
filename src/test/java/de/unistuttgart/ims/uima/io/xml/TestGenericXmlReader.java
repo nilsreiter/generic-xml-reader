@@ -50,7 +50,6 @@ public class TestGenericXmlReader {
 		assertTrue(JCasUtil.exists(jcas, POS_DET.class));
 		assertTrue(JCasUtil.exists(jcas, POS_NOUN.class));
 		assertTrue(JCasUtil.exists(jcas, POS_VERB.class));
-		assertTrue(JCasUtil.exists(jcas, DocumentMetaData.class));
 	}
 
 	@Test
