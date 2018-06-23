@@ -178,7 +178,7 @@ public class GenericXmlReader<D extends TOP> {
 		if (mapping.isUnique()) {
 			annotation = getOrCreate(jcas, mapping.getTargetClass());
 		} else {
-			annotation = (T) jcas.getCas().createFS(JCasUtil.getType(jcas, mapping.getTargetClass()));
+			annotation = jcas.getCas().createFS(JCasUtil.getType(jcas, mapping.getTargetClass()));
 			jcas.getCas().addFsToIndexes(annotation);
 			if (Annotation.class.isAssignableFrom(mapping.getTargetClass())) {
 				((Annotation) annotation).setBegin(hAnno.getBegin());
@@ -303,7 +303,7 @@ public class GenericXmlReader<D extends TOP> {
 		if (JCasUtil.exists(jcas, targetClass)) {
 			return JCasUtil.selectSingle(jcas, targetClass);
 		} else {
-			T annotation = (T) jcas.getCas().createFS(JCasUtil.getType(jcas, targetClass));
+			T annotation = jcas.getCas().createFS(JCasUtil.getType(jcas, targetClass));
 			jcas.getCas().addFsToIndexes(annotation);
 			return annotation;
 		}
