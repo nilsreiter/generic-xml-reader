@@ -18,7 +18,8 @@ public class TestRealFile {
 	public void testTitle() throws UIMAException, IOException {
 		JCas jcas = JCasFactory.createJCas();
 		GenericXmlReader<DocumentMetaData> gxr = new GenericXmlReader<DocumentMetaData>(DocumentMetaData.class);
-
+		gxr.setTextRootSelector(null);
+		gxr.setPreserveWhitespace(true);
 		gxr.addGlobalRule("titleStmt > title", (d, e) -> d.setDocumentTitle(e.text()));
 
 		jcas = gxr.read(jcas, getClass().getResourceAsStream("/0.xml"));
