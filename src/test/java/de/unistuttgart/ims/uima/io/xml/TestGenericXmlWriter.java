@@ -1,9 +1,11 @@
 package de.unistuttgart.ims.uima.io.xml;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 
 import org.apache.commons.io.IOUtils;
@@ -46,5 +48,15 @@ public class TestGenericXmlWriter {
 		gxw.write(jcas, boas, 3, 8);
 		String s = boas.toString("UTF-8");
 		assertEquals(" <pos pos=\"nn\">dog</pos> ", s);
+	}
+
+	@Test
+	public void testPostWriting() throws UnsupportedEncodingException {
+		StringWriter boas = new StringWriter();
+		gxw.write(jcas, boas, 3, 8);
+		String s = boas.toString();
+		assertEquals(" <pos pos=\"nn\">dog</pos> ", s);
+		boas.write("bla");
+		assertTrue(true);
 	}
 }

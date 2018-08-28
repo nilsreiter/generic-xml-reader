@@ -23,11 +23,23 @@ public class GenericInlineWriter<S extends Annotation> {
 		annotationClass = clz;
 	}
 
+	public void write(JCas jcas, Appendable os) {
+		write(jcas, os, 0, jcas.getDocumentText().length());
+	}
+
 	public void write(JCas jcas, OutputStream os) {
 		write(jcas, os, 0, jcas.getDocumentText().length());
 	}
 
 	public void write(JCas jcas, OutputStream os, int begin, int end) {
+		try (OutputStreamWriter fos = new OutputStreamWriter(os)) {
+			write(jcas, fos, begin, end);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void write(JCas jcas, Appendable os, int begin, int end) {
 		StringBuilder b = new StringBuilder(jcas.getDocumentText().substring(begin, end));
 
 		Annotation a = new Annotation(jcas);
@@ -67,9 +79,8 @@ public class GenericInlineWriter<S extends Annotation> {
 			}
 		}
 
-		try (OutputStreamWriter fos = new OutputStreamWriter(os)) {
-			fos.write(b.toString());
-			fos.flush();
+		try {
+			os.append(b.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
