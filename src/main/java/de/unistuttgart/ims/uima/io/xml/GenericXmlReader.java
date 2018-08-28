@@ -45,7 +45,12 @@ import de.unistuttgart.ims.uima.io.xml.type.XMLParsingDescription;
  * implementing {@link de.unistuttgart.quadrama.io.core.AbstractDramaUrlReader}
  * contain usage examples.
  * 
- * 
+ * <h2>Global rules and text root selector</h2> If a non-null value has been set
+ * as a text root selector (with the method
+ * {@link #setTextRootSelector(String)}), the {@link JCas} will only contain the
+ * text below this root selector as document text. In this case, it is sometimes
+ * still useful to extract information from the non-included part. This can be
+ * done by specifying global rules.
  * 
  * 
  * @since 1.0.0
@@ -121,10 +126,31 @@ public class GenericXmlReader<D extends TOP> {
 		elementMapping.add(rule);
 	}
 
+	/**
+	 * This function adds a mapping between elements as expressed in the selector
+	 * and annotations given by the targetClass
+	 * 
+	 * @param selector
+	 *            The CSS selector
+	 * @param targetClass
+	 *            The class to use for the annotations
+	 */
 	public <T extends TOP> void addRule(String selector, Class<T> targetClass) {
 		elementMapping.add(new Rule<T>(selector, targetClass, null));
 	}
 
+	/**
+	 * This function adds a mapping between elements as expressed in the selector
+	 * and annotations given by the targetClass. In addition, a function can be
+	 * defined to do something with the annotation and the element.
+	 * 
+	 * @param selector
+	 *            The CSS selector, {@link org.jsoup.select.Selector} for syntax.
+	 * @param targetClass
+	 *            The class to use for the annotations
+	 * @param callback
+	 *            A function to be executed
+	 */
 	public <T extends TOP> void addRule(String selector, Class<T> targetClass, BiConsumer<T, Element> callback) {
 		elementMapping.add(new Rule<T>(selector, targetClass, callback));
 	}
@@ -152,7 +178,7 @@ public class GenericXmlReader<D extends TOP> {
 		if (mapping.isUnique()) {
 			annotation = getOrCreate(jcas, mapping.getTargetClass());
 		} else {
-			annotation = (T) jcas.getCas().createFS(JCasUtil.getType(jcas, mapping.getTargetClass()));
+			annotation = jcas.getCas().createFS(JCasUtil.getType(jcas, mapping.getTargetClass()));
 			jcas.getCas().addFsToIndexes(annotation);
 			if (Annotation.class.isAssignableFrom(mapping.getTargetClass())) {
 				((Annotation) annotation).setBegin(hAnno.getBegin());
@@ -277,7 +303,7 @@ public class GenericXmlReader<D extends TOP> {
 		if (JCasUtil.exists(jcas, targetClass)) {
 			return JCasUtil.selectSingle(jcas, targetClass);
 		} else {
-			T annotation = (T) jcas.getCas().createFS(JCasUtil.getType(jcas, targetClass));
+			T annotation = jcas.getCas().createFS(JCasUtil.getType(jcas, targetClass));
 			jcas.getCas().addFsToIndexes(annotation);
 			return annotation;
 		}
