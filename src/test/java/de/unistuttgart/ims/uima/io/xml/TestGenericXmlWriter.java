@@ -30,7 +30,7 @@ public class TestGenericXmlWriter {
 		gxr = new GenericXmlReader<DocumentMetaData>(DocumentMetaData.class);
 		gxr.setPreserveWhitespace(true);
 		jcas = JCasFactory.createJCas();
-		jcas = gxr.read(jcas, IOUtils.toInputStream(xmlString, "UTF-8"));
+		jcas = gxr.read(IOUtils.toInputStream(xmlString, "UTF-8"));
 		gxw = new GenericXmlWriter();
 	}
 

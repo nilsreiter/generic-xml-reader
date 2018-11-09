@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
+import org.apache.uima.UIMAException;
 import org.apache.uima.cas.FeatureStructure;
+import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.cas.TOP;
@@ -37,21 +39,33 @@ import de.unistuttgart.ims.uima.io.xml.type.XMLParsingDescription;
  * annotation covers "the" (tag name: <code>det</code>), and one annotation
  * covers "dog" (tag name: <code>n</code>). In addition, we store a CSS selector
  * for each annotation, which allows finding the element in the DOM tree. After
- * the initial conversion, rules are applied to convert some XML elements to
+ * the initial conversion, rules can be applied to convert some XML elements to
  * other UIMA annotations. Rules are expressed in CSS-like syntax.
+ * 
+ * <h2>Text content</h2>There are two modes in which the reader can operate. By
+ * default, the <emph>entire</emph> text content of all XML elements is
+ * considered to be the text. This can be changed by setting a "root selector",
+ * using the method {@link #setTextRootSelector(String)}. Setting a CSS selector
+ * with the method then retrieves <emph>only</emph> the text within the selected
+ * element as the text content of the UIMA document. If a root text root
+ * selector has been set, the distinction between global and regular rules
+ * becomes relevant. Global rules are applied on all XML nodes, while regular
+ * rules are only applied on the XML nodes below the root selector.
+ * 
  * 
  * <h2>Rule syntax</h2> The CSS selectors are interpreted by the JSoup library.
  * See {@link org.jsoup.select.Selector} for a detailed description. Classes
  * implementing {@link de.unistuttgart.quadrama.io.core.AbstractDramaUrlReader}
  * contain usage examples.
  * 
- * <h2>Global rules and text root selector</h2> If a non-null value has been set
- * as a text root selector (with the method
- * {@link #setTextRootSelector(String)}), the {@link JCas} will only contain the
- * text below this root selector as document text. In this case, it is sometimes
- * still useful to extract information from the non-included part. This can be
- * done by specifying global rules.
- * 
+ * <h3>Mapping rules</h3> The most common rule type is a mapping rule. Mapping
+ * rules map an inline XML element onto a UIMA annotation type. Specifying, for
+ * instance, <code>reader.addRule("token", Token.class)</code> (i.e., calling
+ * {@link #addRule(String, Class)}) as a rule would result in UIMA annotations
+ * of the type <code>Token</code> to be added on top of <emph>every</emph>
+ * &lt;token&gt;-element in the XML source. In many cases, code should be
+ * executed while mapping. This code can be added in the form of a lambda
+ * expression, using {@link #addRule(String, Class, BiConsumer)}.
  * 
  * @since 1.0.0
  */
@@ -63,7 +77,7 @@ public class GenericXmlReader<D extends TOP> {
 	Document doc;
 
 	/**
-	 * An XPath expression to specify the root for the documentText
+	 * A CSS expression to specify the root for the documentText
 	 */
 	String textRootSelector = null;
 
@@ -80,6 +94,29 @@ public class GenericXmlReader<D extends TOP> {
 		this.documentClass = documentClass;
 	}
 
+	/**
+	 * Runs the conversion and executes all rules. Produces a new JCas.
+	 * 
+	 * @param xmlStream
+	 *            The stream offering the XML data.
+	 * @return The populated JCas object
+	 * @throws IOException
+	 * @throws UIMAException
+	 */
+	public JCas read(InputStream xmlStream) throws IOException, UIMAException {
+		return read(JCasFactory.createJCas(), xmlStream);
+	}
+
+	/**
+	 * Runs the conversion and executes all rules.
+	 * 
+	 * @param jcas
+	 * @param xmlStream
+	 * @return
+	 * @throws IOException
+	 * @deprecated
+	 */
+	@Deprecated
 	public JCas read(JCas jcas, InputStream xmlStream) throws IOException {
 
 		// parse the input
@@ -165,10 +202,24 @@ public class GenericXmlReader<D extends TOP> {
 		elementMapping.add(new Rule<T>(selector, targetClass, callback, true));
 	}
 
+	/**
+	 * Retrieves an annotation by XML id
+	 * 
+	 * @param id
+	 *            The id
+	 * @return The feature structure
+	 */
 	public Map.Entry<Element, FeatureStructure> getAnnotation(String id) {
 		return idRegistry.get(id);
 	}
 
+	/**
+	 * Checks whether an XML id is defined
+	 * 
+	 * @param id
+	 *            The id
+	 * @return a boolean
+	 */
 	public boolean exists(String id) {
 		return idRegistry.containsKey(id);
 	}

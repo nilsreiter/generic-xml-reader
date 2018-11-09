@@ -8,7 +8,6 @@ import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.uima.UIMAException;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,14 +24,13 @@ public class TestRoundTrip {
 	public void setUp() throws UIMAException, IOException {
 		gxr = new GenericXmlReader<DocumentMetaData>(DocumentMetaData.class);
 		gxr.setPreserveWhitespace(true);
-		jcas = JCasFactory.createJCas();
 		gxw = new GenericXmlWriter();
 	}
 
 	@Test
-	public void test1() throws IOException {
+	public void test1() throws IOException, UIMAException {
 		xmlString = "<text><s><pos pos=\"det\">the</pos> <pos pos=\"nn\">dog</pos> <pos pos=\"v\">barks</pos></s> <s><pos>The</pos> <pos>cat</pos> <pos>too</pos></s></text>";
-		jcas = gxr.read(jcas, IOUtils.toInputStream(xmlString, "UTF-8"));
+		jcas = gxr.read(IOUtils.toInputStream(xmlString, "UTF-8"));
 		ByteArrayOutputStream boas = new ByteArrayOutputStream();
 		gxw.write(jcas, boas);
 		String s = boas.toString("UTF-8");
@@ -40,9 +38,9 @@ public class TestRoundTrip {
 	}
 
 	@Test
-	public void test2() throws IOException {
+	public void test2() throws IOException, UIMAException {
 		xmlString = "<?xml version=\"1.0\"?>\n<text><s><pos pos=\"det\">the</pos> <pos pos=\"nn\">dog</pos> <pos pos=\"v\">barks</pos></s> <s><pos>The</pos> <pos>cat</pos> <pos>too</pos></s></text>";
-		jcas = gxr.read(jcas, IOUtils.toInputStream(xmlString, "UTF-8"));
+		jcas = gxr.read(IOUtils.toInputStream(xmlString, "UTF-8"));
 		ByteArrayOutputStream boas = new ByteArrayOutputStream();
 		gxw.write(jcas, boas);
 		String s = boas.toString("UTF-8");
@@ -50,9 +48,9 @@ public class TestRoundTrip {
 	}
 
 	@Test
-	public void test3() throws IOException {
+	public void test3() throws IOException, UIMAException {
 		xmlString = "<?xml version=\"1.0\"?>\n<?xml-stylesheet type=\"text/css\" href=\"../schema/tei.css\"?>\n<text><s><pos pos=\"det\">the</pos> <pos pos=\"nn\">dog</pos> <pos pos=\"v\">barks</pos></s> <s><pos>The</pos> <pos>cat</pos> <pos>too</pos></s></text>";
-		jcas = gxr.read(jcas, IOUtils.toInputStream(xmlString, "UTF-8"));
+		jcas = gxr.read(IOUtils.toInputStream(xmlString, "UTF-8"));
 		ByteArrayOutputStream boas = new ByteArrayOutputStream();
 		gxw.write(jcas, boas);
 		String s = boas.toString("UTF-8");
@@ -60,13 +58,13 @@ public class TestRoundTrip {
 	}
 
 	@Test
-	public void test4() throws IOException {
+	public void test4() throws IOException, UIMAException {
 		testRoundTrip(getClass().getResourceAsStream("/11g1d.0.xml"));
 	}
 
-	public void testRoundTrip(InputStream is) throws IOException {
+	public void testRoundTrip(InputStream is) throws IOException, UIMAException {
 		String input = IOUtils.toString(is);
-		jcas = gxr.read(jcas, IOUtils.toInputStream(input, "UTF-8"));
+		jcas = gxr.read(IOUtils.toInputStream(input, "UTF-8"));
 		ByteArrayOutputStream boas = new ByteArrayOutputStream();
 		gxw.write(jcas, boas);
 		String s = boas.toString("UTF-8");
