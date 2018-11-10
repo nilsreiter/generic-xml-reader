@@ -67,6 +67,15 @@ import de.unistuttgart.ims.uima.io.xml.type.XMLParsingDescription;
  * executed while mapping. This code can be added in the form of a lambda
  * expression, using {@link #addRule(String, Class, BiConsumer)}.
  * 
+ * <h2>Whitespace</h2> The converter can operate in two modes that can be
+ * switched with the method {@link #setPreserveWhitespace(boolean)}. If this is
+ * set to true, the whitespace is preserved <emph>exactly</emph> as in the
+ * original XML. This is what you want if the goal is to re-export XML that is
+ * as similar as possible. If that's not the case, the CAS can be made much
+ * nicer by setting the option to false, which is also the default. In this
+ * case, block elements (as defined in {@link Visitor#blockElements}) get an
+ * extra newline at the end.
+ * 
  * @since 1.0.0
  */
 public class GenericXmlReader<D extends TOP> {
@@ -350,7 +359,7 @@ public class GenericXmlReader<D extends TOP> {
 		this.preserveWhitespace = preserveWhitespace;
 	}
 
-	public static <T extends TOP> T getOrCreate(JCas jcas, Class<T> targetClass) {
+	protected static <T extends TOP> T getOrCreate(JCas jcas, Class<T> targetClass) {
 		if (JCasUtil.exists(jcas, targetClass)) {
 			return JCasUtil.selectSingle(jcas, targetClass);
 		} else {

@@ -20,6 +20,8 @@ This package converts provides a few classes to convert inline XML into
 UIMA-based stand-off annotation. How to map inline XML elements onto UIMA 
 annotation types can be specified with rules.
 
+Within certain limits, the package can also be used to export into inline XML.
+
 # Example
 
 Let's consider an example XML snippet

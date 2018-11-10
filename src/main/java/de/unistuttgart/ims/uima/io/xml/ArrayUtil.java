@@ -8,8 +8,23 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.cas.FSArray;
 import org.apache.uima.jcas.cas.StringArray;
 
+/**
+ * Utility classes
+ * 
+ * @author reiterns
+ *
+ */
 public class ArrayUtil {
 
+	/**
+	 * Creates a UIMA StringArray based on a collection of strings
+	 * 
+	 * @param jcas
+	 *            The JCas to store the array
+	 * @param coll
+	 *            the collection of strings
+	 * @return A StringArray that is already added to indexes
+	 */
 	public static StringArray toStringArray(JCas jcas, Collection<String> coll) {
 		StringArray arr = new StringArray(jcas, coll.size());
 		Iterator<String> collIter = coll.iterator();

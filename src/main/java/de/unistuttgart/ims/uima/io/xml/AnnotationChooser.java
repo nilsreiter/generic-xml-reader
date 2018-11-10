@@ -4,6 +4,14 @@ import java.util.Comparator;
 
 import org.apache.uima.jcas.tcas.Annotation;
 
+/**
+ * A comparator for annotations, using the character positions of the involved
+ * annotations. We're ignoring type priorities etc., the ordering is determined
+ * only on character positions.
+ * 
+ * @author reiterns
+ *
+ */
 public class AnnotationChooser implements Comparator<Annotation> {
 
 	int currentPosition;
