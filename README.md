@@ -1,7 +1,7 @@
 ![Maven](https://img.shields.io/maven-central/v/de.unistuttgart.ims.uima.io/generic-xml-reader.svg)
 [![Build Status](https://travis-ci.org/nilsreiter/generic-xml-reader.svg?branch=master)](https://travis-ci.org/nilsreiter/generic-xml-reader)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-
+[![Javadocs](https://www.javadoc.io/badge/de.unistuttgart.ims.uima.io/generic-xml-reader.svg)](https://www.javadoc.io/doc/de.unistuttgart.ims.uima.io/generic-xml-reader)
 
 # generic-xml-reader
 A library to read in arbitrary XML content (including TEI) into UIMA, translating structural annotation to stand off
