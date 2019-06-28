@@ -8,7 +8,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.uima.cas.FeatureStructure;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
@@ -67,6 +70,8 @@ public class GenericXmlReader<D extends TOP> {
 	 */
 	String textRootSelector = null;
 
+	protected Function<Element, Boolean> ignoreFunction = null;
+
 	boolean preserveWhitespace = false;
 
 	@SuppressWarnings("rawtypes")
@@ -80,6 +85,8 @@ public class GenericXmlReader<D extends TOP> {
 		this.documentClass = documentClass;
 	}
 
+	private static final Logger logger = LogManager.getLogger(GenericXmlReader.class);
+
 	public JCas read(JCas jcas, InputStream xmlStream) throws IOException {
 
 		// parse the input
@@ -87,6 +94,10 @@ public class GenericXmlReader<D extends TOP> {
 
 		// prepare traversing the DOM
 		Visitor vis = new Visitor(jcas, isPreserveWhitespace());
+
+		// set ignore function if needed
+		if (getIgnoreFunction() != null)
+			vis.setIgnoreFunction(getIgnoreFunction());
 
 		// select the root element
 		Element root;
@@ -130,10 +141,8 @@ public class GenericXmlReader<D extends TOP> {
 	 * This function adds a mapping between elements as expressed in the selector
 	 * and annotations given by the targetClass
 	 * 
-	 * @param selector
-	 *            The CSS selector
-	 * @param targetClass
-	 *            The class to use for the annotations
+	 * @param selector    The CSS selector
+	 * @param targetClass The class to use for the annotations
 	 */
 	public <T extends TOP> void addRule(String selector, Class<T> targetClass) {
 		elementMapping.add(new Rule<T>(selector, targetClass, null));
@@ -144,12 +153,10 @@ public class GenericXmlReader<D extends TOP> {
 	 * and annotations given by the targetClass. In addition, a function can be
 	 * defined to do something with the annotation and the element.
 	 * 
-	 * @param selector
-	 *            The CSS selector, {@link org.jsoup.select.Selector} for syntax.
-	 * @param targetClass
-	 *            The class to use for the annotations
-	 * @param callback
-	 *            A function to be executed
+	 * @param selector    The CSS selector, {@link org.jsoup.select.Selector} for
+	 *                    syntax.
+	 * @param targetClass The class to use for the annotations
+	 * @param callback    A function to be executed
 	 */
 	public <T extends TOP> void addRule(String selector, Class<T> targetClass, BiConsumer<T, Element> callback) {
 		elementMapping.add(new Rule<T>(selector, targetClass, callback));
@@ -199,6 +206,10 @@ public class GenericXmlReader<D extends TOP> {
 		Elements elms = rootElement.select(mapping.getSelector());
 		for (Element elm : elms) {
 			XMLElement hAnno = annoMap.get(elm.cssSelector());
+			if (getIgnoreFunction() != null && getIgnoreFunction().apply(elm)) {
+				logger.error(
+						"You are about to apply a rule that involves an XML element that has been skipped. If this works, it likely has unintended side effects.");
+			}
 			if (elm.hasText() || elm.childNodeSize() > 0) {
 				T annotation = getFeatureStructure(jcas, hAnno, elm, mapping);
 				if (mapping.getCallback() != null && annotation != null)
@@ -211,8 +222,7 @@ public class GenericXmlReader<D extends TOP> {
 	 * This class represents the rules we apply
 	 * 
 	 *
-	 * @param <T>
-	 *            Rules are specific for a UIMA type
+	 * @param <T> Rules are specific for a UIMA type
 	 */
 	public static class Rule<T extends TOP> {
 		String selector;
@@ -223,16 +233,13 @@ public class GenericXmlReader<D extends TOP> {
 
 		/**
 		 * 
-		 * @param selector
-		 *            The CSS selector
-		 * @param targetClass
-		 *            The target class
-		 * @param callback
-		 *            A function to be called for every instance. Can be null.
-		 * @param global
-		 *            Whether to apply the rule globally or just for the text part
-		 * @param createFeatureStructures
-		 *            Whether to create new feature structures
+		 * @param selector                The CSS selector
+		 * @param targetClass             The target class
+		 * @param callback                A function to be called for every instance.
+		 *                                Can be null.
+		 * @param global                  Whether to apply the rule globally or just for
+		 *                                the text part
+		 * @param createFeatureStructures Whether to create new feature structures
 		 */
 		public Rule(String selector, Class<T> targetClass, BiConsumer<T, Element> callback, boolean global) {
 			this.selector = selector;
@@ -307,5 +314,31 @@ public class GenericXmlReader<D extends TOP> {
 			jcas.getCas().addFsToIndexes(annotation);
 			return annotation;
 		}
+	}
+
+	/**
+	 * Returns the set ignore function. {@see #setIgnoreFunction(Function)} for
+	 * details.
+	 * 
+	 * @return The ignore function.
+	 */
+	public Function<Element, Boolean> getIgnoreFunction() {
+		return ignoreFunction;
+	}
+
+	/**
+	 * The specified function is applied on each element. It can be used to skip
+	 * some XML elements entirely. Skipped elements will not be represented in the
+	 * JCas at all, and can not be used in rules.
+	 * 
+	 * The main reason for using this function is to make processing faster if the
+	 * XML file contains a large number of fine-grained, but unneeded tags.
+	 * 
+	 * @param ignoreFunction The function maps from an Element to a boolean. Note
+	 *                       that the function defines which elements to skip. By
+	 *                       default, all elements are included.
+	 */
+	public void setIgnoreFunction(Function<Element, Boolean> ignoreFunction) {
+		this.ignoreFunction = ignoreFunction;
 	}
 }
