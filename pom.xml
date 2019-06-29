@@ -164,6 +164,7 @@
 					<doctitle>${project.name}, ${project.version}</doctitle>
 					<additionalparam>-Xdoclint:none</additionalparam>
 					<detectLinks />
+					<source>8</source>
 				</configuration>
 				<executions>
 					<execution>
