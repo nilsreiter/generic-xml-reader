@@ -2,6 +2,7 @@ package de.unistuttgart.ims.uima.io.xml;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.uima.fit.factory.JCasBuilder;
@@ -41,6 +42,8 @@ public class Visitor implements NodeVisitor {
 	 */
 	protected boolean preserveWhitespace = false;
 
+	protected Function<Element, Boolean> ignoreFunction = null;
+
 	protected Visitor(JCas jcas) {
 		this.builder = new JCasBuilder(jcas);
 	}
@@ -58,7 +61,11 @@ public class Visitor implements NodeVisitor {
 			else
 				builder.add(((TextNode) node).text());
 		} else {
-			beginMap.put(node, builder.getPosition());
+			if (node instanceof Element) {
+				if (!skip((Element) node))
+					beginMap.put(node, builder.getPosition());
+			} else
+				beginMap.put(node, builder.getPosition());
 		}
 	}
 
@@ -66,16 +73,18 @@ public class Visitor implements NodeVisitor {
 	public void tail(Node node, int depth) {
 		if (node instanceof Element) {
 			Element elm = (Element) node;
-			XMLElement anno = builder.add(beginMap.get(node), XMLElement.class);
-			anno.setTag(elm.tagName());
-			anno.setId(elm.id());
-			anno.setSelector(elm.cssSelector());
-			anno.setAttributes(elm.attributes().html());
-			if (elm.className().isEmpty())
-				anno.setCls(elm.attr("type"));
-			else
-				anno.setCls(elm.className());
-			annotationMap.put(elm.cssSelector(), anno);
+			if (!skip(elm)) {
+				XMLElement anno = builder.add(beginMap.get(node), XMLElement.class);
+				anno.setTag(elm.tagName());
+				anno.setId(elm.id());
+				anno.setSelector(elm.cssSelector());
+				anno.setAttributes(elm.attributes().html());
+				if (elm.className().isEmpty())
+					anno.setCls(elm.attr("type"));
+				else
+					anno.setCls(elm.className());
+				annotationMap.put(elm.cssSelector(), anno);
+			}
 			if (!this.preserveWhitespace)
 				if (elm.isBlock() || ArrayUtils.contains(blockElements, elm.tagName()))
 					builder.add("\n");
@@ -101,5 +110,20 @@ public class Visitor implements NodeVisitor {
 
 	protected void setBlockElements(String[] blockElements) {
 		this.blockElements = blockElements;
+	}
+
+	private boolean skip(Element e) {
+		if (getIgnoreFunction() == null)
+			return false;
+		else
+			return getIgnoreFunction().apply(e);
+	}
+
+	protected Function<Element, Boolean> getIgnoreFunction() {
+		return ignoreFunction;
+	}
+
+	protected void setIgnoreFunction(Function<Element, Boolean> ignoreFunction) {
+		this.ignoreFunction = ignoreFunction;
 	}
 }

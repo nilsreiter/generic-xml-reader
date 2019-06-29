@@ -1,10 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.unistuttgart.ims.uima.io</groupId>
 	<artifactId>generic-xml-reader</artifactId>
 	<version>1.5.0-SNAPSHOT</version>
-		<name>${project.groupId}:${project.artifactId}</name>
+	<name>${project.groupId}:${project.artifactId}</name>
 	<url>https://github.com/nilsreiter/generic-xml-reader</url>
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -24,7 +25,7 @@
 			<email>nils.reiter@ims.uni-stuttgart.de</email>
 		</developer>
 	</developers>
-		<issueManagement>
+	<issueManagement>
 		<system>GitHub Issues</system>
 		<url>https://github.com/nilsreiter/generic-xml-reader/issues</url>
 	</issueManagement>
@@ -95,6 +96,16 @@
 			</artifactId>
 			<version>1.9.0</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.11.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.11.2</version>
 		</dependency>
 	</dependencies>
 	<build>
