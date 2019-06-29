@@ -43,7 +43,7 @@ public class TestGenericXmlReader {
 		gxr.addRule("noun", POS_NOUN.class);
 		gxr.addRule("verb", POS_VERB.class);
 
-		jcas = gxr.read(jcas, IOUtils.toInputStream(xmlString, "UTF-8"));
+		jcas = gxr.read(IOUtils.toInputStream(xmlString, "UTF-8"));
 
 		assertNotNull(jcas);
 		assertEquals("the dog barks", jcas.getDocumentText());
@@ -64,7 +64,7 @@ public class TestGenericXmlReader {
 				anno.setPosValue(xmlElement.attr("pos"));
 		});
 
-		jcas = gxr.read(jcas, IOUtils.toInputStream(xmlString, "UTF-8"));
+		jcas = gxr.read(IOUtils.toInputStream(xmlString, "UTF-8"));
 
 		assertNotNull(jcas);
 		assertEquals("the dog barks The cat too", jcas.getDocumentText());
@@ -93,7 +93,7 @@ public class TestGenericXmlReader {
 				anno.setPosValue(xmlElement.attr("pos"));
 		});
 
-		jcas = gxr.read(jcas, IOUtils.toInputStream(xmlString, "UTF-8"));
+		jcas = gxr.read(IOUtils.toInputStream(xmlString, "UTF-8"));
 
 		assertNotNull(jcas);
 		assertEquals("the dog barks The cat too\n", jcas.getDocumentText());
@@ -122,7 +122,7 @@ public class TestGenericXmlReader {
 				anno.setPosValue(xmlElement.attr("pos"));
 		});
 
-		jcas = gxr.read(jcas, IOUtils.toInputStream(xmlString, "UTF-8"));
+		jcas = gxr.read(IOUtils.toInputStream(xmlString, "UTF-8"));
 
 		assertNotNull(jcas);
 

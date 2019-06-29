@@ -19,21 +19,36 @@ import de.unistuttgart.ims.uima.io.xml.type.XmlDeclarationAnnotation;
 public class Visitor implements NodeVisitor {
 
 	protected JCasBuilder builder;
+
+	/**
+	 * Maps XML nodes to the character position where they start in the CAS
+	 */
 	protected Map<Node, Integer> beginMap = new HashMap<Node, Integer>();
 
+	/**
+	 * Maps CSS selectors to XMLelements
+	 */
 	protected Map<String, XMLElement> annotationMap = new HashMap<String, XMLElement>();
 
+	/**
+	 * An array of block elements. If {@link #preserveWhitespace} is not true,
+	 * newline characters are introduced at the end of each block element
+	 */
 	protected String[] blockElements = new String[] { "l", "p", "sp" };
 
+	/**
+	 * Whether to preserve the whitespace exactly as it is in the original. This is
+	 * needed for the XML->CAS->XML roundtrip. Defaults to false.
+	 */
 	protected boolean preserveWhitespace = false;
 
 	protected Function<Element, Boolean> ignoreFunction = null;
 
-	public Visitor(JCas jcas) {
+	protected Visitor(JCas jcas) {
 		this.builder = new JCasBuilder(jcas);
 	}
 
-	public Visitor(JCas jcas, boolean preserveWhitespace) {
+	protected Visitor(JCas jcas, boolean preserveWhitespace) {
 		this.builder = new JCasBuilder(jcas);
 		this.preserveWhitespace = preserveWhitespace;
 	}
@@ -80,20 +95,20 @@ public class Visitor implements NodeVisitor {
 		}
 	}
 
-	public JCas getJCas() {
+	protected JCas getJCas() {
 		builder.close();
 		return builder.getJCas();
 	}
 
-	public Map<String, XMLElement> getAnnotationMap() {
+	protected Map<String, XMLElement> getAnnotationMap() {
 		return annotationMap;
 	}
 
-	public String[] getBlockElements() {
+	protected String[] getBlockElements() {
 		return blockElements;
 	}
 
-	public void setBlockElements(String[] blockElements) {
+	protected void setBlockElements(String[] blockElements) {
 		this.blockElements = blockElements;
 	}
 

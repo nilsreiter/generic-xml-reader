@@ -8,8 +8,21 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.cas.FSArray;
 import org.apache.uima.jcas.cas.StringArray;
 
+/**
+ * Utility classes
+ * 
+ * @author reiterns
+ *
+ */
 public class ArrayUtil {
 
+	/**
+	 * Creates a UIMA StringArray based on a collection of strings
+	 * 
+	 * @param jcas The JCas to store the array
+	 * @param coll the collection of strings
+	 * @return A StringArray that is already added to indexes
+	 */
 	public static StringArray toStringArray(JCas jcas, Collection<String> coll) {
 		StringArray arr = new StringArray(jcas, coll.size());
 		Iterator<String> collIter = coll.iterator();
@@ -21,6 +34,13 @@ public class ArrayUtil {
 		return arr;
 	}
 
+	/**
+	 * @see #toStringArray(JCas, Collection)
+	 * 
+	 * @param jcas The JCas object
+	 * @param coll The Strings that should be in the array
+	 * @return A StringArray, already added to indexes
+	 */
 	public static StringArray toStringArray(JCas jcas, String... coll) {
 		StringArray arr = new StringArray(jcas, coll.length);
 		for (int i = 0; i < coll.length; i++) {
@@ -30,6 +50,13 @@ public class ArrayUtil {
 		return arr;
 	}
 
+	/**
+	 * Creates an FSArray from a Java arrray
+	 * 
+	 * @param jcas The JCas
+	 * @param fs   The java array
+	 * @return An FSArray, already added to indexes
+	 */
 	public static FSArray toFSArray(JCas jcas, FeatureStructure... fs) {
 		FSArray arr = new FSArray(jcas, fs.length);
 		for (int i = 0; i < fs.length; i++) {
