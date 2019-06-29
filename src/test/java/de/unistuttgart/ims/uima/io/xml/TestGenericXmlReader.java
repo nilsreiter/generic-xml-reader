@@ -1,6 +1,7 @@
 package de.unistuttgart.ims.uima.io.xml;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -20,6 +21,7 @@ import de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_NOUN;
 import de.tudarmstadt.ukp.dkpro.core.api.lexmorph.type.pos.POS_VERB;
 import de.tudarmstadt.ukp.dkpro.core.api.metadata.type.DocumentMetaData;
 import de.tudarmstadt.ukp.dkpro.core.api.segmentation.type.Sentence;
+import de.unistuttgart.ims.uima.io.xml.type.XMLElement;
 import de.unistuttgart.ims.uima.io.xml.type.XMLParsingDescription;
 
 public class TestGenericXmlReader {
@@ -41,7 +43,7 @@ public class TestGenericXmlReader {
 		gxr.addRule("noun", POS_NOUN.class);
 		gxr.addRule("verb", POS_VERB.class);
 
-		jcas = gxr.read(jcas, IOUtils.toInputStream(xmlString, "UTF-8"));
+		jcas = gxr.read(IOUtils.toInputStream(xmlString, "UTF-8"));
 
 		assertNotNull(jcas);
 		assertEquals("the dog barks", jcas.getDocumentText());
@@ -62,7 +64,7 @@ public class TestGenericXmlReader {
 				anno.setPosValue(xmlElement.attr("pos"));
 		});
 
-		jcas = gxr.read(jcas, IOUtils.toInputStream(xmlString, "UTF-8"));
+		jcas = gxr.read(IOUtils.toInputStream(xmlString, "UTF-8"));
 
 		assertNotNull(jcas);
 		assertEquals("the dog barks The cat too", jcas.getDocumentText());
@@ -91,7 +93,7 @@ public class TestGenericXmlReader {
 				anno.setPosValue(xmlElement.attr("pos"));
 		});
 
-		jcas = gxr.read(jcas, IOUtils.toInputStream(xmlString, "UTF-8"));
+		jcas = gxr.read(IOUtils.toInputStream(xmlString, "UTF-8"));
 
 		assertNotNull(jcas);
 		assertEquals("the dog barks The cat too\n", jcas.getDocumentText());
@@ -120,7 +122,7 @@ public class TestGenericXmlReader {
 				anno.setPosValue(xmlElement.attr("pos"));
 		});
 
-		jcas = gxr.read(jcas, IOUtils.toInputStream(xmlString, "UTF-8"));
+		jcas = gxr.read(IOUtils.toInputStream(xmlString, "UTF-8"));
 
 		assertNotNull(jcas);
 
@@ -140,5 +142,30 @@ public class TestGenericXmlReader {
 		assertEquals("det", JCasUtil.selectByIndex(jcas, POS.class, 0).getPosValue());
 		assertEquals("nn", JCasUtil.selectByIndex(jcas, POS.class, 1).getPosValue());
 
+	}
+
+	@Test
+	public void test5() throws UIMAException, IOException {
+		String xmlString = "<s><det><c>t</c><c>h</c><c>e</c></det><c> </c><noun><c>d</c><c>o</c><c>g</c></noun> <verb>barks</verb></s>";
+		gxr.addRule("det", POS_DET.class);
+		gxr.addRule("s", Sentence.class);
+		gxr.addRule("noun", POS_NOUN.class);
+		gxr.addRule("verb", POS_VERB.class);
+
+		gxr.setIgnoreFunction(e -> (e.tagName().equalsIgnoreCase("c")));
+
+		jcas = gxr.read(jcas, IOUtils.toInputStream(xmlString, "UTF-8"));
+
+		assertNotNull(jcas);
+		assertEquals("the dog barks", jcas.getDocumentText());
+
+		assertTrue(JCasUtil.exists(jcas, Sentence.class));
+		assertTrue(JCasUtil.exists(jcas, POS_DET.class));
+		assertTrue(JCasUtil.exists(jcas, POS_NOUN.class));
+		assertTrue(JCasUtil.exists(jcas, POS_VERB.class));
+
+		for (XMLElement e : JCasUtil.select(jcas, XMLElement.class)) {
+			assertNotEquals(e.getTag(), "c");
+		}
 	}
 }
