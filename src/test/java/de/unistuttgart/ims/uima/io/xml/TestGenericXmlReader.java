@@ -154,7 +154,34 @@ public class TestGenericXmlReader {
 
 		gxr.setIgnoreFunction(e -> (e.tagName().equalsIgnoreCase("c")));
 
-		jcas = gxr.read(jcas, IOUtils.toInputStream(xmlString, "UTF-8"));
+		jcas = gxr.read(IOUtils.toInputStream(xmlString, "UTF-8"));
+
+		assertNotNull(jcas);
+		assertEquals("the dog barks", jcas.getDocumentText());
+
+		assertTrue(JCasUtil.exists(jcas, Sentence.class));
+		assertTrue(JCasUtil.exists(jcas, POS_DET.class));
+		assertTrue(JCasUtil.exists(jcas, POS_NOUN.class));
+		assertTrue(JCasUtil.exists(jcas, POS_VERB.class));
+
+		for (XMLElement e : JCasUtil.select(jcas, XMLElement.class)) {
+			assertNotEquals(e.getTag(), "c");
+		}
+	}
+
+	@Test
+	public void testHeader() throws UIMAException, IOException {
+		String xmlString = "<TEI><teiHeader></teiHeader><body><s><det><c>t</c><c>h</c><c>e</c></det><c> </c><noun><c>d</c><c>o</c><c>g</c></noun> <verb>barks</verb></s></body></TEI>";
+		gxr.addRule("det", POS_DET.class);
+		gxr.addRule("s", Sentence.class);
+		gxr.addRule("noun", POS_NOUN.class);
+		gxr.addRule("verb", POS_VERB.class);
+
+		gxr.setPreserveWhitespace(true);
+
+		gxr.setIgnoreFunction(e -> (e.tagName().equalsIgnoreCase("c")));
+
+		jcas = gxr.read(IOUtils.toInputStream(xmlString, "UTF-8"));
 
 		assertNotNull(jcas);
 		assertEquals("the dog barks", jcas.getDocumentText());
