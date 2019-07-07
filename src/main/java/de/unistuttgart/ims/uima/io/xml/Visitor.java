@@ -38,7 +38,7 @@ public class Visitor implements NodeVisitor {
 
 	/**
 	 * Whether to preserve the whitespace exactly as it is in the original. This is
-	 * needed for the XML->CAS->XML roundtrip. Defaults to false.
+	 * needed for the XML-&gt;CAS-&gt;XML roundtrip. Defaults to false.
 	 */
 	protected boolean preserveWhitespace = false;
 
