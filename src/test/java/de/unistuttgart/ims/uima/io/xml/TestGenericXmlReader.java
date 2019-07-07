@@ -171,16 +171,16 @@ public class TestGenericXmlReader {
 
 	@Test
 	public void testEmptyElements() throws UIMAException, IOException {
-		String xmlString = "<TEI><teiHeader><date lang=\"en\"></teiHeader><body><s><det><c>t</c><c>h</c><c>e</c></det><c> </c><noun><c>d</c><c>o</c><c>g</c></noun> <verb>barks</verb></s></body></TEI>";
+		String xmlString = "<TEI><teiHeader><date lang=\"xx\"></teiHeader><body><s><det><c>t</c><c>h</c><c>e</c></det><c> </c><noun><c>d</c><c>o</c><c>g</c></noun> <verb>barks</verb></s></body></TEI>";
 
-		gxr.setPreserveWhitespace(false);
-		gxr.setTextRootSelector("TEI > teiHeader");
+		gxr.setPreserveWhitespace(true);
+		gxr.setTextRootSelector("TEI > body");
 
 		gxr.addRule("det", POS_DET.class);
 		gxr.addRule("s", Sentence.class);
 		gxr.addRule("noun", POS_NOUN.class);
 		gxr.addRule("verb", POS_VERB.class);
-		gxr.addGlobalRule("teiHeader > data", (d, e) -> d.setLanguage(e.attr("lang")));
+		gxr.addGlobalRule("teiHeader > date", (d, e) -> d.setLanguage(e.attr("lang")));
 
 		gxr.setIgnoreFunction(e -> (e.tagName().equalsIgnoreCase("c")));
 
@@ -190,7 +190,7 @@ public class TestGenericXmlReader {
 		DocumentMetaData dmd = JCasUtil.selectSingle(jcas, DocumentMetaData.class);
 
 		assertEquals("the dog barks", jcas.getDocumentText());
-		assertEquals("en", dmd.getLanguage());
+		assertEquals("xx", dmd.getLanguage());
 
 		assertTrue(JCasUtil.exists(jcas, Sentence.class));
 		assertTrue(JCasUtil.exists(jcas, POS_DET.class));
