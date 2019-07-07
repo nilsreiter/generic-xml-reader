@@ -57,9 +57,7 @@ import de.unistuttgart.ims.uima.io.xml.type.XMLParsingDescription;
  * 
  * 
  * <h2>Rule syntax</h2> The CSS selectors are interpreted by the JSoup library.
- * See {@link org.jsoup.select.Selector} for a detailed description. Classes
- * implementing {@link de.unistuttgart.quadrama.io.core.AbstractDramaUrlReader}
- * contain usage examples.
+ * See {@link org.jsoup.select.Selector} for a detailed description.
  * 
  * <h3>Mapping rules</h3> The most common rule type is a mapping rule. Mapping
  * rules map an inline XML element onto a UIMA annotation type. Specifying, for
@@ -190,6 +188,7 @@ public class GenericXmlReader<D extends TOP> {
 	 * 
 	 * @param selector    The CSS selector
 	 * @param targetClass The class to use for the annotations
+	 * @param <T>         Class of targetClass.
 	 */
 	public <T extends TOP> void addRule(String selector, Class<T> targetClass) {
 		elementMapping.add(new Rule<T>(selector, targetClass, null));
@@ -374,7 +373,7 @@ public class GenericXmlReader<D extends TOP> {
 	}
 
 	/**
-	 * Returns the set ignore function. {@see #setIgnoreFunction(Function)} for
+	 * Returns the set ignore function. @see #setIgnoreFunction(Function) for
 	 * details.
 	 * 
 	 * @return The ignore function.
