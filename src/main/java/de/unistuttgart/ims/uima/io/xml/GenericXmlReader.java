@@ -10,9 +10,9 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import org.apache.uima.UIMAException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.uima.UIMAException;
 import org.apache.uima.cas.FeatureStructure;
 import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.fit.util.JCasUtil;
@@ -103,6 +103,8 @@ public class GenericXmlReader<D extends TOP> {
 	Map<String, Map.Entry<Element, FeatureStructure>> idRegistry = new HashMap<String, Map.Entry<Element, FeatureStructure>>();
 
 	Class<D> documentClass;
+
+	boolean skipEmptyElements = false;
 
 	public GenericXmlReader(Class<D> documentClass) {
 		this.documentClass = documentClass;
@@ -270,7 +272,7 @@ public class GenericXmlReader<D extends TOP> {
 				logger.error(
 						"You are about to apply a rule that involves an XML element that has been skipped. If this works, it likely has unintended side effects.");
 			}
-			if (elm.hasText() || elm.childNodeSize() > 0) {
+			if (!skipEmptyElements || elm.hasText() || elm.childNodeSize() > 0) {
 				T annotation = getFeatureStructure(jcas, hAnno, elm, mapping);
 				if (mapping.getCallback() != null && annotation != null)
 					mapping.getCallback().accept(annotation, elm);
@@ -400,5 +402,13 @@ public class GenericXmlReader<D extends TOP> {
 	 */
 	public void setIgnoreFunction(Function<Element, Boolean> ignoreFunction) {
 		this.ignoreFunction = ignoreFunction;
+	}
+
+	public boolean isSkipEmptyElements() {
+		return skipEmptyElements;
+	}
+
+	public void setSkipEmptyElements(boolean skipEmptyElements) {
+		this.skipEmptyElements = skipEmptyElements;
 	}
 }
