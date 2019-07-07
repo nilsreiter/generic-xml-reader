@@ -46,14 +46,14 @@ import de.unistuttgart.ims.uima.io.xml.type.XMLParsingDescription;
  * other UIMA annotations. Rules are expressed in CSS-like syntax.
  * 
  * <h2>Text content</h2>There are two modes in which the reader can operate. By
- * default, the <emph>entire</emph> text content of all XML elements is
- * considered to be the text. This can be changed by setting a "root selector",
- * using the method {@link #setTextRootSelector(String)}. Setting a CSS selector
- * with the method then retrieves <emph>only</emph> the text within the selected
- * element as the text content of the UIMA document. If a root text root
- * selector has been set, the distinction between global and regular rules
- * becomes relevant. Global rules are applied on all XML nodes, while regular
- * rules are only applied on the XML nodes below the root selector.
+ * default, the <i>entire</i> text content of all XML elements is considered to
+ * be the text. This can be changed by setting a "root selector", using the
+ * method {@link #setTextRootSelector(String)}. Setting a CSS selector with the
+ * method then retrieves <i>only</i> the text within the selected element as the
+ * text content of the UIMA document. If a root text root selector has been set,
+ * the distinction between global and regular rules becomes relevant. Global
+ * rules are applied on all XML nodes, while regular rules are only applied on
+ * the XML nodes below the root selector.
  * 
  * 
  * <h2>Rule syntax</h2> The CSS selectors are interpreted by the JSoup library.
@@ -65,19 +65,19 @@ import de.unistuttgart.ims.uima.io.xml.type.XMLParsingDescription;
  * rules map an inline XML element onto a UIMA annotation type. Specifying, for
  * instance, <code>reader.addRule("token", Token.class)</code> (i.e., calling
  * {@link #addRule(String, Class)}) as a rule would result in UIMA annotations
- * of the type <code>Token</code> to be added on top of <emph>every</emph>
+ * of the type <code>Token</code> to be added on top of <i>every</i>
  * &lt;token&gt;-element in the XML source. In many cases, code should be
  * executed while mapping. This code can be added in the form of a lambda
  * expression, using {@link #addRule(String, Class, BiConsumer)}.
  * 
  * <h2>Whitespace</h2> The converter can operate in two modes that can be
  * switched with the method {@link #setPreserveWhitespace(boolean)}. If this is
- * set to true, the whitespace is preserved <emph>exactly</emph> as in the
- * original XML. This is what you want if the goal is to re-export XML that is
- * as similar as possible. If that's not the case, the CAS can be made much
- * nicer by setting the option to false, which is also the default. In this
- * case, block elements (as defined in {@link Visitor#blockElements}) get an
- * extra newline at the end.
+ * set to true, the whitespace is preserved <i>exactly</i> as in the original
+ * XML. This is what you want if the goal is to re-export XML that is as similar
+ * as possible. If that's not the case, the CAS can be made much nicer by
+ * setting the option to false, which is also the default. In this case, block
+ * elements (as defined in {@link Visitor#blockElements}) get an extra newline
+ * at the end.
  * 
  * @since 1.0.0
  */
@@ -115,11 +115,10 @@ public class GenericXmlReader<D extends TOP> {
 	/**
 	 * Runs the conversion and executes all rules. Produces a new JCas.
 	 * 
-	 * @param xmlStream
-	 *            The stream offering the XML data.
+	 * @param xmlStream The stream offering the XML data.
 	 * @return The populated JCas object
-	 * @throws IOException
-	 * @throws UIMAException
+	 * @throws IOException   If the input stream errors
+	 * @throws UIMAException If there is an issue with creating the JCas.
 	 */
 	public JCas read(InputStream xmlStream) throws IOException, UIMAException {
 		return read(JCasFactory.createJCas(), xmlStream);
@@ -131,7 +130,7 @@ public class GenericXmlReader<D extends TOP> {
 	 * @param jcas
 	 * @param xmlStream
 	 * @return
-	 * @throws IOException
+	 * @throws IOException If the input stream errors
 	 * @deprecated
 	 */
 	@Deprecated
@@ -223,8 +222,7 @@ public class GenericXmlReader<D extends TOP> {
 	/**
 	 * Retrieves an annotation by XML id
 	 * 
-	 * @param id
-	 *            The id
+	 * @param id The id
 	 * @return The feature structure
 	 */
 	public Map.Entry<Element, FeatureStructure> getAnnotation(String id) {
@@ -234,8 +232,7 @@ public class GenericXmlReader<D extends TOP> {
 	/**
 	 * Checks whether an XML id is defined
 	 * 
-	 * @param id
-	 *            The id
+	 * @param id The id
 	 * @return a boolean
 	 */
 	public boolean exists(String id) {
@@ -295,13 +292,11 @@ public class GenericXmlReader<D extends TOP> {
 
 		/**
 		 * 
-		 * @param selector                The CSS selector
-		 * @param targetClass             The target class
-		 * @param callback                A function to be called for every instance.
-		 *                                Can be null.
-		 * @param global                  Whether to apply the rule globally or just for
-		 *                                the text part
-		 * @param createFeatureStructures Whether to create new feature structures
+		 * @param selector    The CSS selector
+		 * @param targetClass The target class
+		 * @param callback    A function to be called for every instance. Can be null.
+		 * @param global      Whether to apply the rule globally or just for the text
+		 *                    part
 		 */
 		public Rule(String selector, Class<T> targetClass, BiConsumer<T, Element> callback, boolean global) {
 			this.selector = selector;
