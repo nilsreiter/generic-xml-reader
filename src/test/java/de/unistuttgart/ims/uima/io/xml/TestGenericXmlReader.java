@@ -154,10 +154,43 @@ public class TestGenericXmlReader {
 
 		gxr.setIgnoreFunction(e -> (e.tagName().equalsIgnoreCase("c")));
 
-		jcas = gxr.read(jcas, IOUtils.toInputStream(xmlString, "UTF-8"));
+		jcas = gxr.read(IOUtils.toInputStream(xmlString, "UTF-8"));
 
 		assertNotNull(jcas);
 		assertEquals("the dog barks", jcas.getDocumentText());
+
+		assertTrue(JCasUtil.exists(jcas, Sentence.class));
+		assertTrue(JCasUtil.exists(jcas, POS_DET.class));
+		assertTrue(JCasUtil.exists(jcas, POS_NOUN.class));
+		assertTrue(JCasUtil.exists(jcas, POS_VERB.class));
+
+		for (XMLElement e : JCasUtil.select(jcas, XMLElement.class)) {
+			assertNotEquals(e.getTag(), "c");
+		}
+	}
+
+	@Test
+	public void test6() throws UIMAException, IOException {
+		String xmlString = "<TEI><teiHeader><date lang=\"en\"></teiHeader><body><s><det><c>t</c><c>h</c><c>e</c></det><c> </c><noun><c>d</c><c>o</c><c>g</c></noun> <verb>barks</verb></s></body></TEI>";
+
+		gxr.setPreserveWhitespace(false);
+		gxr.setTextRootSelector("TEI > teiHeader");
+
+		gxr.addRule("det", POS_DET.class);
+		gxr.addRule("s", Sentence.class);
+		gxr.addRule("noun", POS_NOUN.class);
+		gxr.addRule("verb", POS_VERB.class);
+		gxr.addGlobalRule("teiHeader > data", (d, e) -> d.setLanguage(e.attr("lang")));
+
+		gxr.setIgnoreFunction(e -> (e.tagName().equalsIgnoreCase("c")));
+
+		jcas = gxr.read(IOUtils.toInputStream(xmlString, "UTF-8"));
+
+		assertNotNull(jcas);
+		DocumentMetaData dmd = JCasUtil.selectSingle(jcas, DocumentMetaData.class);
+
+		assertEquals("the dog barks", jcas.getDocumentText());
+		assertEquals("en", dmd.getLanguage());
 
 		assertTrue(JCasUtil.exists(jcas, Sentence.class));
 		assertTrue(JCasUtil.exists(jcas, POS_DET.class));
