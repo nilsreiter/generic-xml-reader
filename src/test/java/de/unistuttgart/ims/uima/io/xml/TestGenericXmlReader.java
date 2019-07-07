@@ -170,7 +170,7 @@ public class TestGenericXmlReader {
 	}
 
 	@Test
-	public void test6() throws UIMAException, IOException {
+	public void testEmptyElements() throws UIMAException, IOException {
 		String xmlString = "<TEI><teiHeader><date lang=\"en\"></teiHeader><body><s><det><c>t</c><c>h</c><c>e</c></det><c> </c><noun><c>d</c><c>o</c><c>g</c></noun> <verb>barks</verb></s></body></TEI>";
 
 		gxr.setPreserveWhitespace(false);
