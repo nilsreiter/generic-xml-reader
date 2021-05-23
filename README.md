@@ -11,7 +11,7 @@ A library to read in arbitrary XML content (including TEI) into UIMA, translatin
 <dependency>
   <groupId>de.unistuttgart.ims.uima.io</groupId>
   <artifactId>generic-xml-reader</artifactId>
-  <version>1.4.0</version>
+  <version>2.0.1</version>
 </dependency>
 ```
 
